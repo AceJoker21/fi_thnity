@@ -10,10 +10,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import tn.esprit.fi_thnity.R;
 
@@ -26,16 +37,26 @@ public class OTPVerificationActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private String phoneNumber;
+    private String verificationId;
     private CountDownTimer countDownTimer;
     private static final long RESEND_TIMEOUT = 60000; // 60 seconds
+
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference usersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp_verification);
 
-        // Get phone number from intent
+        // Initialize Firebase
+        firebaseAuth = FirebaseAuth.getInstance();
+        usersRef = FirebaseDatabase.getInstance("https://fi-thnity-11a68-default-rtdb.europe-west1.firebasedatabase.app")
+                .getReference("users");
+
+        // Get phone number and verification ID from intent
         phoneNumber = getIntent().getStringExtra("phoneNumber");
+        verificationId = getIntent().getStringExtra("verificationId");
 
         // Initialize views
         tvPhoneNumber = findViewById(R.id.tvPhoneNumber);
@@ -90,31 +111,70 @@ public class OTPVerificationActivity extends AppCompatActivity {
         // Show progress
         showLoading(true);
 
-        // TODO: Implement Firebase OTP verification
-        // For now, simulate verification
-        // In production, use credential.signInWithCredential()
+        // Create credential with verification ID and OTP
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, otp);
 
-        // Simulate network delay
-        btnVerify.postDelayed(() -> {
-            showLoading(false);
+        // Sign in with credential
+        firebaseAuth.signInWithCredential(credential)
+                .addOnSuccessListener(authResult -> {
+                    FirebaseUser user = authResult.getUser();
+                    if (user != null) {
+                        // Check if user profile exists in database
+                        checkUserProfileExists(user);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    showLoading(false);
+                    showCustomAlert("Verification Failed",
+                        "Invalid OTP. Please try again.", "OK", null);
+                });
+    }
 
-            // TODO: Check if user profile exists in Firebase
-            // If yes, go to MainActivity
-            // If no, go to ProfileSetupActivity
+    private void checkUserProfileExists(FirebaseUser firebaseUser) {
+        usersRef.child(firebaseUser.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        showLoading(false);
 
-            Toast.makeText(this, "Verification successful!", Toast.LENGTH_SHORT).show();
+                        if (snapshot.exists()) {
+                            // User profile exists, go to MainActivity
+                            Intent intent = new Intent(OTPVerificationActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // New user, go to ProfileSetupActivity
+                            Intent intent = new Intent(OTPVerificationActivity.this, ProfileSetupActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
 
-            // Navigate to MainActivity (or ProfileSetup if new user)
-            Intent intent = new Intent(OTPVerificationActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        }, 1500);
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        showLoading(false);
+                        showCustomAlert("Error",
+                            "Failed to check user profile: " + error.getMessage(), "OK", null);
+                    }
+                });
     }
 
     private void resendOTP() {
-        // TODO: Implement Firebase resend OTP
-        Toast.makeText(this, "OTP resent to " + phoneNumber, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Please go back and request a new OTP", Toast.LENGTH_SHORT).show();
+    }
+
+    // Custom Alert Dialog (no Android logo)
+    private void showCustomAlert(String title, String message, String positiveText, Runnable positiveAction) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomAlertDialog);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(positiveText, (dialog, which) -> {
+            if (positiveAction != null) positiveAction.run();
+            dialog.dismiss();
+        });
+        builder.show();
     }
 
     private void startResendTimer() {

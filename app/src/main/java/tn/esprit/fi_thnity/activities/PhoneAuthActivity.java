@@ -7,10 +7,19 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
+
+import java.util.concurrent.TimeUnit;
 
 import tn.esprit.fi_thnity.R;
 
@@ -20,10 +29,16 @@ public class PhoneAuthActivity extends AppCompatActivity {
     private MaterialButton btnSendOTP;
     private ProgressBar progressBar;
 
+    private FirebaseAuth firebaseAuth;
+    private String verificationId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_auth);
+
+        // Initialize Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance();
 
         // Initialize views
         etCountryCode = findViewById(R.id.etCountryCode);
@@ -63,19 +78,75 @@ public class PhoneAuthActivity extends AppCompatActivity {
 
         String fullPhoneNumber = "+216" + phoneNumber;
 
-        // TODO: Implement Firebase Phone Authentication
-        // For now, simulate sending OTP and navigate to verification screen
-        // In production, use FirebaseAuth.getInstance().verifyPhoneNumber()
+        // Firebase Phone Authentication
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(firebaseAuth)
+                .setPhoneNumber(fullPhoneNumber)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    @Override
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
+                        // Auto-verification completed (rare on real devices)
+                        showLoading(false);
+                        signInWithCredential(credential);
+                    }
 
-        // Simulate network delay
-        btnSendOTP.postDelayed(() -> {
-            showLoading(false);
+                    @Override
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
+                        showLoading(false);
+                        showCustomAlert("Verification Failed",
+                            "Failed to send OTP: " + e.getMessage(), "OK", null);
+                    }
 
-            // Navigate to OTP Verification
-            Intent intent = new Intent(PhoneAuthActivity.this, OTPVerificationActivity.class);
-            intent.putExtra("phoneNumber", fullPhoneNumber);
-            startActivity(intent);
-        }, 1500);
+                    @Override
+                    public void onCodeSent(@NonNull String verificationId,
+                                           @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                        // Save verification ID and navigate to OTP screen
+                        PhoneAuthActivity.this.verificationId = verificationId;
+                        showLoading(false);
+
+                        // Navigate to OTP Verification
+                        Intent intent = new Intent(PhoneAuthActivity.this, OTPVerificationActivity.class);
+                        intent.putExtra("phoneNumber", fullPhoneNumber);
+                        intent.putExtra("verificationId", verificationId);
+                        startActivity(intent);
+                    }
+                })
+                .build();
+
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+
+    private void signInWithCredential(PhoneAuthCredential credential) {
+        firebaseAuth.signInWithCredential(credential)
+                .addOnSuccessListener(authResult -> {
+                    // User signed in successfully, navigate to profile setup or main
+                    navigateToNextScreen();
+                })
+                .addOnFailureListener(e -> {
+                    showCustomAlert("Sign In Failed",
+                        "Failed to sign in: " + e.getMessage(), "OK", null);
+                });
+    }
+
+    private void navigateToNextScreen() {
+        // Navigate to MainActivity (authentication check will be done in SplashActivity)
+        Intent intent = new Intent(PhoneAuthActivity.this, ProfileSetupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    // Custom Alert Dialog (no Android logo)
+    private void showCustomAlert(String title, String message, String positiveText, Runnable positiveAction) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomAlertDialog);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(positiveText, (dialog, which) -> {
+            if (positiveAction != null) positiveAction.run();
+            dialog.dismiss();
+        });
+        builder.show();
     }
 
     private void showLoading(boolean isLoading) {

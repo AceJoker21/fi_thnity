@@ -62,7 +62,8 @@ public class BroadcastRideActivity extends AppCompatActivity {
 
         // Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance();
-        ridesRef = FirebaseDatabase.getInstance().getReference("rides");
+        ridesRef = FirebaseDatabase.getInstance("https://fi-thnity-11a68-default-rtdb.europe-west1.firebasedatabase.app")
+                .getReference("rides");
 
         // Get ride type from intent
         String rideTypeStr = getIntent().getStringExtra(EXTRA_RIDE_TYPE);

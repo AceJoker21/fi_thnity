@@ -142,6 +142,12 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void navigateToAuth() {
+        // Mark onboarding as completed
+        getSharedPreferences("FiThnityPrefs", MODE_PRIVATE)
+                .edit()
+                .putBoolean("onboarding_completed", true)
+                .apply();
+
         // Navigate to Phone Authentication Activity
         Intent intent = new Intent(OnboardingActivity.this, PhoneAuthActivity.class);
         startActivity(intent);
