@@ -8,13 +8,15 @@ Fi Thnity connects Tunisians heading in the same direction, making transportatio
 
 ## ✨ Features
 
-- 📱 **Phone Authentication** - Secure login via Firebase Phone Auth
+- 📱 **Phone Authentication** - Secure login via Firebase Phone Auth with OTP verification
 - 🗺️ **MapLibre Integration** - Interactive maps powered by MapTiler
 - 🚖 **Ride Broadcasting** - Post ride requests or offers with transport type selection
 - 📍 **Location Selection** - Interactive map-based location picker with reverse geocoding
 - 👥 **Multiple Transport Types** - Taxi, Taxi Collectif, Private Car, Metro, Bus
+- 🔍 **Rides Discovery** - Browse and filter active ride requests and offers in real-time
+- 👤 **Profile Management** - View and edit profile with photo upload
 - 🎨 **Material Design 3** - Modern, Tunisian-inspired UI with custom color palette
-- 🔥 **Firebase Backend** - Realtime Database, Authentication, Cloud Messaging
+- 🔥 **Firebase Backend** - Realtime Database (Europe West 1), Authentication, Storage, Cloud Messaging
 
 ## 🎨 Design
 
@@ -68,8 +70,12 @@ The app features a Tunisian-inspired color palette:
 
    - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
    - Enable Phone Authentication
-   - Enable Realtime Database
+   - Create Realtime Database (use **Europe West 1** region)
+     - Database URL: `https://fi-thnity-11a68-default-rtdb.europe-west1.firebasedatabase.app`
+   - Enable Firebase Storage for profile photos
    - Download `google-services.json` and place it in `app/` directory
+
+   **Important**: The app is configured to use Firebase Realtime Database in the Europe West 1 region. If you create a database in a different region, you'll need to update the database URL in all activities and fragments.
 
 4. **Build and Run**
    ```bash
@@ -82,13 +88,13 @@ The app features a Tunisian-inspired color palette:
 
 ### Screens
 - **Splash & Onboarding** - Welcome screens with app introduction
-- **Phone Authentication** - Login with phone number and OTP
-- **Profile Setup** - Complete user profile
-- **Home** - Map view with quick actions
-- **Broadcast Ride** - Post ride request or offer
-- **Rides** - Active rides list
-- **Community** - Social feed
-- **Profile** - User profile and settings
+- **Phone Authentication** - Login with phone number and OTP verification
+- **Profile Setup/Edit** - Create or update user profile with photo upload
+- **Home** - Interactive map view with quick action buttons
+- **Broadcast Ride** - Post ride request or offer with location selection
+- **Rides** - Browse and filter active ride requests and offers
+- **Community** - Social feed (in progress)
+- **Profile** - View user profile, stats, and settings
 
 ### Key Components
 - `activities/` - All activity classes
@@ -108,19 +114,28 @@ The following files are gitignored and must be configured locally:
 
 ## 📝 Development Status
 
-**Completed:**
-- ✅ Onboarding screens
-- ✅ Phone authentication
-- ✅ Profile setup
+**Completed (75%):**
+- ✅ Onboarding screens with ViewPager2
+- ✅ Phone authentication with Firebase Auth
+- ✅ OTP verification with countdown timer
+- ✅ Profile creation and editing
+- ✅ Profile photo upload to Firebase Storage
+- ✅ Real user data display from Firebase
 - ✅ Home screen with bottom navigation
-- ✅ MapLibre integration
-- ✅ Location selection
-- ✅ Broadcast ride screen
+- ✅ MapLibre integration with MapTiler
+- ✅ Location selection with reverse geocoding
+- ✅ Broadcast ride screen (requests and offers)
+- ✅ Rides viewing with real-time Firebase updates
+- ✅ Rides filtering (All/Requests/Offers)
+- ✅ Material Design 3 UI throughout
+- ✅ Proper Firebase Database region configuration
 
 **In Progress:**
+- 🔄 Ride matching algorithm
 - 🔄 Real-time location tracking service
 - 🔄 Community feed
 - 🔄 Chat functionality
+- 🔄 Push notifications
 
 ## 🤝 Contributing
 

@@ -179,7 +179,43 @@
 
 ---
 
-### 6. **Home Screen with Bottom Navigation** ✅
+### 6. **Firebase Database Region Configuration** ✅
+
+**Critical Fix**: Firebase Database connection was forcefully killed
+
+**Issue**: App was stuck at splash screen and OTP verification was failing with error:
+```
+Firebase Database connection was forcefully killed by the server.
+Reason: Database lives in a different region.
+Please change your database URL to https://fi-thnity-11a68-default-rtdb.europe-west1.firebasedatabase.app
+```
+
+**Root Cause**: Firebase Realtime Database was created in **Europe West 1** region, but the app was using the default `FirebaseDatabase.getInstance()` which connects to the US region.
+
+**Solution**: Updated all Firebase Database references to use explicit database URL:
+
+```java
+// Before (incorrect)
+FirebaseDatabase.getInstance().getReference("users")
+
+// After (correct)
+FirebaseDatabase.getInstance("https://fi-thnity-11a68-default-rtdb.europe-west1.firebasedatabase.app")
+    .getReference("users")
+```
+
+**Files Updated**:
+- `SplashActivity.java` - User profile check
+- `OTPVerificationActivity.java` - New user detection
+- `ProfileSetupActivity.java` - Profile creation/editing
+- `BroadcastRideActivity.java` - Ride broadcasting
+- `ProfileFragment.java` - Profile display
+- `RidesFragment.java` - Rides loading
+
+**Result**: Authentication flow now works correctly, users can sign in and proceed through the app.
+
+---
+
+### 7. **Home Screen with Bottom Navigation** ✅
 
 #### Bottom Navigation (4 Tabs)
 
@@ -280,21 +316,29 @@
 
 ---
 
-#### **Profile Fragment**
+#### **Profile Fragment** (Updated with Real Data)
+
+**Firebase Integration**:
+- Loads real user data from Firebase Realtime Database
+- ValueEventListener for real-time updates
+- Glide for profile photo loading with circleCrop
+- Proper lifecycle management (onResume reload)
 
 **Profile Header Card**:
 - Circular photo (100dp, rounded)
-- User name (Headline2)
-- Phone number (Body2)
+- Loaded from user's `photoUrl` with Glide
+- User name from Firebase (Headline2)
+- Phone number from Firebase (Body2)
 - Stats section:
-  - ⭐ Rating: 4.8 (primary color)
-  - 🚗 Total Rides: 0 (accent color)
+  - ⭐ Rating: from user.rating (primary color)
+  - 🚗 Total Rides: from user.totalRides (accent color)
   - Horizontal 50/50 layout
 
 **Menu Cards** (with arrow icons):
 1. ✏️ **Edit Profile**
-   - Opens `ProfileSetupActivity`
-   - Full profile editing
+   - Opens `ProfileSetupActivity` with `isEditMode=true`
+   - Pre-fills existing data
+   - Updates only modified fields
 
 2. 📋 **My Rides**
    - View ride history (placeholder)
@@ -303,10 +347,26 @@
    - App settings (placeholder)
 
 **Logout Button**:
-- Outlined style
-- Red border (error color)
-- Full width
-- Top margin: 12dp
+- Firebase Auth sign out
+- Clears session
+- Navigates to PhoneAuthActivity
+- Outlined style with red border
+
+**Key Methods**:
+```java
+private void loadUserProfile() {
+    usersRef.child(currentUser.getUid())
+        .addValueEventListener(new ValueEventListener() {
+            // Load and display user data
+            // Load profile photo with Glide
+        });
+}
+
+@Override
+public void onResume() {
+    // Reload profile data after editing
+}
+```
 
 **Files**:
 - `ProfileFragment.java`
@@ -314,7 +374,219 @@
 
 ---
 
-### 7. **Data Models** ✅
+### 8. **Profile Setup with Edit Mode** ✅
+
+**Enhanced Features**: Profile creation AND editing in one activity
+
+**Two Modes**:
+
+**1. Create Mode** (new users):
+- Title: "Complete Your Profile"
+- Subtitle: "We need a few more details"
+- Button: "Complete Setup"
+- Saves full User object to Firebase
+- Navigates to MainActivity after success
+
+**2. Edit Mode** (existing users):
+- Title: "Edit Profile"
+- Subtitle: "Update your information"
+- Button: "Save Changes"
+- Pre-fills existing data
+- Updates only name and photoUrl fields
+- Navigates back to ProfileFragment after success
+
+**Edit Mode Implementation**:
+```java
+// Intent extra to trigger edit mode
+Intent intent = new Intent(context, ProfileSetupActivity.class);
+intent.putExtra("isEditMode", true);
+startActivity(intent);
+
+// Load existing profile
+private void loadExistingProfile() {
+    usersRef.child(currentUser.getUid())
+        .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                // Pre-fill name
+                etName.setText(user.getName());
+                // Load existing photo
+                if (user.getPhotoUrl() != null) {
+                    currentPhotoUrl = user.getPhotoUrl();
+                    Glide.with(context)
+                        .load(user.getPhotoUrl())
+                        .circleCrop()
+                        .into(ivProfilePhoto);
+                }
+            }
+        });
+}
+```
+
+**Photo Handling**:
+- If new photo selected → Upload to Firebase Storage → Update photoUrl
+- If no new photo selected in edit mode → Keep existing `currentPhotoUrl`
+- If upload fails → Continue without photo (graceful degradation)
+
+**Save Logic**:
+```java
+if (isEditMode) {
+    // Update only specific fields
+    usersRef.child(uid).child("name").setValue(name);
+    usersRef.child(uid).child("photoUrl").setValue(photoUrl);
+} else {
+    // Create new user with all fields
+    User user = new User(uid, name, phoneNumber);
+    user.setPhotoUrl(photoUrl);
+    usersRef.child(uid).setValue(user);
+}
+```
+
+**Files**:
+- `ProfileSetupActivity.java` (enhanced)
+- `activity_profile_setup.xml`
+
+---
+
+### 9. **Rides Viewing System** ✅
+
+**Complete ride discovery with real-time updates and filtering**
+
+#### **Rides Fragment**
+
+**Firebase Integration**:
+- Real-time ValueEventListener on `rides` reference
+- Europe West 1 database URL
+- Loads only active rides (`ride.isActive() == true`)
+- Sorts by creation time (newest first)
+- Proper listener cleanup in `onDestroyView()`
+
+**Filter System**:
+- **ChipGroup** with single selection
+- **All** - Shows all active rides (default)
+- **Requests** - Shows only ride requests
+- **Offers** - Shows only ride offers
+- Material3 Filter Chip styling
+
+**Features**:
+```java
+private enum FilterType { ALL, REQUESTS, OFFERS }
+
+private void loadRides() {
+    ridesListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            allRides.clear();
+            for (DataSnapshot rideSnapshot : snapshot.getChildren()) {
+                Ride ride = rideSnapshot.getValue(Ride.class);
+                if (ride != null && ride.isActive()) {
+                    allRides.add(ride);
+                }
+            }
+            // Sort newest first
+            Collections.sort(allRides, (r1, r2) ->
+                Long.compare(r2.getCreatedAt(), r1.getCreatedAt()));
+            filterAndDisplayRides();
+        }
+    };
+}
+
+private void filterAndDisplayRides() {
+    List<Ride> filteredRides = new ArrayList<>();
+    for (Ride ride : allRides) {
+        if (currentFilter == FilterType.ALL ||
+            (currentFilter == FilterType.REQUESTS && ride.getRideType() == REQUEST) ||
+            (currentFilter == FilterType.OFFERS && ride.getRideType() == OFFER)) {
+            filteredRides.add(ride);
+        }
+    }
+    adapter.setRides(filteredRides);
+    showEmptyState(filteredRides.isEmpty());
+}
+```
+
+**Empty State**:
+- Large location icon (100dp, grey)
+- "No active rides" message
+- Centered in screen
+- Toggles with RecyclerView
+
+**Files**:
+- `RidesFragment.java`
+- `fragment_rides.xml`
+
+---
+
+#### **Rides Adapter**
+
+**RecyclerView Adapter** with ViewHolder pattern
+
+**Ride Card Display**:
+1. **Type Badge** (top-left)
+   - "REQUEST" or "OFFER" text
+   - Color-coded background:
+     - REQUEST: Red (accent #D62828)
+     - OFFER: Blue (primary #006D9C)
+   - Bold white text
+   - Rounded corners (12dp)
+
+2. **Transport Type** (header)
+   - Emoji + name (e.g., "🚖 Taxi")
+   - Large 18sp text
+   - From `TransportType.toString()`
+
+3. **Seats Badge** (conditional)
+   - Only for shareable transport + offers + available seats > 0
+   - Format: "3 seats" or "1 seat"
+   - Secondary button background
+   - Bold text
+
+4. **User Info**
+   - Circular profile photo (32dp)
+   - Loaded with Glide (circleCrop)
+   - User name
+   - Placeholder if no photo
+
+5. **Origin & Destination**
+   - Icon + "From"/"To" label
+   - Full address from Location
+   - Max 2 lines with ellipsis
+   - Primary color for origin icon
+   - Accent color for destination icon
+
+6. **Time Info**
+   - DateUtils.getRelativeTimeSpanString
+   - Format: "Posted 5 minutes ago"
+   - Expired handling:
+     - Text: "Expired"
+     - Color: Red
+     - Card alpha: 0.6 (faded)
+
+**Smart Seat Display Logic**:
+```java
+if (ride.getTransportType().isShareable() &&
+    ride.getRideType() == Ride.RideType.OFFER &&
+    ride.getAvailableSeats() > 0) {
+    tvSeats.setVisibility(View.VISIBLE);
+    tvSeats.setText(seats + (seats == 1 ? " seat" : " seats"));
+} else {
+    tvSeats.setVisibility(View.GONE);
+}
+```
+
+**Click Handling**:
+- OnRideClickListener interface
+- Toast on click (ready for ride details dialog)
+- RecyclerView.NO_POSITION check
+
+**Files**:
+- `RidesAdapter.java` (NEW)
+- `item_ride.xml` (NEW)
+
+---
+
+### 10. **Data Models** ✅
 
 #### **User.java**
 ```java
@@ -383,6 +655,61 @@ BUS
 
 ---
 
+### 11. **Git Security & Repository Setup** ✅
+
+**Git Repository Initialization**
+
+**Security-First Approach**: Ensuring sensitive data is never exposed to version control
+
+**Files Protected** (via .gitignore):
+```gitignore
+# Google Services (sensitive Firebase configuration)
+google-services.json
+
+# API Keys and sensitive configuration
+gradle.properties
+secrets.properties
+
+# Keystore files
+*.keystore
+*.jks
+
+# Build artifacts
+build/
+*.apk
+*.aab
+```
+
+**Example Templates Created**:
+
+1. **gradle.properties.example**
+   ```properties
+   # MapTiler API Key for MapLibre
+   # Get your free API key from https://cloud.maptiler.com/
+   MAPTILER_API_KEY="YOUR_MAPTILER_API_KEY_HERE"
+   ```
+
+2. **google-services.json.example**
+   - Template showing structure without actual credentials
+   - Instructions for obtaining real file from Firebase Console
+
+**Repository Setup**:
+```bash
+git init
+git remote add origin git@github.com:medb2m/fi_thnity.git
+```
+
+**GitHub Repository Description**:
+> Fi Thnity (On My Way) - A community-driven carpooling and ride-sharing app for Tunisia. What started as an idea has evolved into a meaningful academic project at ESPRIT, with a vision to continue growing and building a community that keeps our planet safe while making transportation easier and more accessible for all Tunisians.
+
+**Benefits**:
+- Team members can easily configure their local environment
+- No risk of API key exposure
+- Clear documentation for new developers
+- Follows security best practices
+
+---
+
 ## 📂 Project Structure
 
 ```
@@ -410,7 +737,8 @@ tn.esprit.fi_thnity/
 │   └── OnboardingItem.java ✅
 │
 ├── adapters/
-│   └── OnboardingAdapter.java ✅
+│   ├── OnboardingAdapter.java ✅
+│   └── RidesAdapter.java ✅ (NEW)
 │
 ├── services/ (ready for implementation)
 ├── utils/ (ready for implementation)
@@ -825,10 +1153,26 @@ chats/
 
 ---
 
-**Last Updated**: 2025-10-18
+**Last Updated**: 2025-10-19
 **Version**: 1.0.0-beta
 **Status**: 🟢 Active Development
-**Completion**: ~60% (7/12 major features)
+**Completion**: ~78% (10/13 major features)
+
+**Recent Updates**:
+- ✅ Fixed critical Firebase Database region issue
+- ✅ Implemented profile viewing with real Firebase data
+- ✅ Added profile editing functionality
+- ✅ Created complete rides viewing system
+- ✅ Implemented ride filtering (All/Requests/Offers)
+- ✅ Real-time Firebase updates for rides
+- ✅ Material Design 3 ride cards with smart displays
+
+**Next Priorities**:
+- 🔜 Ride details dialog
+- 🔜 Ride matching algorithm
+- 🔜 Real-time location tracking
+- 🔜 Community feed implementation
+- 🔜 Chat functionality
 
 ---
 

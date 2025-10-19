@@ -2,19 +2,23 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.FiThnity.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginBottom="16dp"
     android:clickable="true"
     android:focusable="true"
-    app:cardElevation="4dp">
+    app:cardBackgroundColor="@color/card_background"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0.5dp"
+    app:strokeColor="@color/divider">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <!-- Header: Type Badge + Transport -->
         <LinearLayout
@@ -23,88 +27,101 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Ride Type Badge -->
+            <!-- Ride Type Badge - Modern iOS style -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardTypeBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/primary"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="0dp">
 
                 <TextView
                     android:id="@+id/tvRideType"
-                    style="@style/TextAppearance.FiThnity.Caption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="4dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
                     android:textColor="@android:color/white"
+                    android:textSize="11sp"
                     android:textStyle="bold"
+                    android:letterSpacing="0.05"
+                    android:fontFamily="sans-serif-medium"
                     tools:text="REQUEST" />
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Transport Type -->
+            <!-- Transport Type - Bigger & Bolder -->
             <TextView
                 android:id="@+id/tvTransportType"
-                style="@style/TextAppearance.FiThnity.Headline2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:textColor="@color/text_primary"
-                android:textSize="18sp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
                 tools:text="🚖 Taxi" />
 
-            <!-- Seats (if available) -->
+            <!-- Seats (if available) - Modern Pill Style -->
             <TextView
                 android:id="@+id/tvSeats"
-                style="@style/TextAppearance.FiThnity.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_secondary"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="4dp"
-                android:textColor="@color/text_primary"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="8dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
                 android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
                 android:visibility="gone"
                 tools:text="3 seats"
                 tools:visibility="visible" />
         </LinearLayout>
 
-        <!-- User Info -->
+        <!-- User Info - Modern iOS Style -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/ivUserPhoto"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="User photo"
-                android:src="@android:drawable/ic_menu_camera"
-                android:tint="@color/text_hint" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface_variant">
+
+                <ImageView
+                    android:id="@+id/ivUserPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="User photo"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:tint="@color/text_hint"
+                    android:padding="8dp" />
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/tvUserName"
-                style="@style/TextAppearance.FiThnity.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textColor="@color/text_secondary"
+                android:layout_marginStart="12dp"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
                 tools:text="John Doe" />
         </LinearLayout>
 
-        <!-- Divider -->
+        <!-- Divider - Softer Modern -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginVertical="12dp"
-            android:background="@color/text_hint"
-            android:alpha="0.2" />
+            android:layout_marginVertical="16dp"
+            android:background="@color/divider" />
 
         <!-- Origin -->
         <LinearLayout
@@ -129,20 +146,24 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TextAppearance.FiThnity.Caption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="From"
-                    android:textColor="@color/text_hint" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.03" />
 
                 <TextView
                     android:id="@+id/tvOrigin"
-                    style="@style/TextAppearance.FiThnity.Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif"
                     tools:text="Avenue Habib Bourguiba, Tunis" />
             </LinearLayout>
         </LinearLayout>
@@ -169,32 +190,37 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TextAppearance.FiThnity.Caption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="To"
-                    android:textColor="@color/text_hint" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.03" />
 
                 <TextView
                     android:id="@+id/tvDestination"
-                    style="@style/TextAppearance.FiThnity.Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif"
                     tools:text="La Marsa, Tunis" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Time Info -->
+        <!-- Time Info - Modern Style -->
         <TextView
             android:id="@+id/tvTime"
-            style="@style/TextAppearance.FiThnity.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textColor="@color/text_hint"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/text_tertiary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif"
             tools:text="Posted 5 minutes ago" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

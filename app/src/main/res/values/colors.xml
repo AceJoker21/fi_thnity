@@ -4,47 +4,72 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Brand Colors - New Fi Thnity Palette -->
-    <!-- Primary: Bleu Saphir Tunisien - Évoque la mer Méditerranée et la confiance -->
-    <color name="primary">#006D9C</color>
-    <color name="primary_dark">#004F73</color>
-    <color name="primary_light">#3399C6</color>
+    <!-- Modern Brand Colors - iOS-Inspired Fi Thnity Palette -->
+    <!-- Primary: Modern Ocean Blue - Vibrant Mediterranean blue -->
+    <color name="primary">#0A84FF</color>
+    <color name="primary_dark">#0066CC</color>
+    <color name="primary_light">#5EB0FF</color>
+    <color name="primary_gradient_start">#0A84FF</color>
+    <color name="primary_gradient_end">#00C9FF</color>
 
-    <!-- Secondary: Jaune Sable du Sahel - Rappelle le soleil et l'énergie positive -->
-    <color name="secondary">#FFD54F</color>
-    <color name="secondary_dark">#FFC107</color>
-    <color name="secondary_light">#FFE57F</color>
+    <!-- Secondary: Sunset Orange - Warm Tunisian sunset -->
+    <color name="secondary">#FF9500</color>
+    <color name="secondary_dark">#E67E00</color>
+    <color name="secondary_light">#FFB340</color>
 
-    <!-- Accent: Rouge Médina - Clin d'œil au drapeau tunisien -->
-    <color name="accent">#D62828</color>
-    <color name="accent_dark">#A61F1F</color>
-    <color name="accent_light">#E85858</color>
+    <!-- Accent: Modern Coral - Energetic and youthful -->
+    <color name="accent">#FF375F</color>
+    <color name="accent_dark">#E02850</color>
+    <color name="accent_light">#FF6B8A</color>
 
-    <!-- Background Colors -->
-    <color name="background">#F9F9F9</color>
+    <!-- Background Colors - iOS Style -->
+    <color name="background">#F2F2F7</color>
+    <color name="background_elevated">#FFFFFF</color>
     <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F9F9FB</color>
+    <color name="card_background">#FFFFFF</color>
 
-    <!-- Text Colors -->
-    <color name="text_primary">#1E1E1E</color>
-    <color name="text_secondary">#757575</color>
-    <color name="text_hint">#9E9E9E</color>
+    <!-- Text Colors - Modern Contrast -->
+    <color name="text_primary">#1C1C1E</color>
+    <color name="text_secondary">#8E8E93</color>
+    <color name="text_tertiary">#AEAEB2</color>
+    <color name="text_hint">#C7C7CC</color>
 
-    <!-- Transport Type Colors -->
-    <color name="taxi_color">#FFD54F</color>
-    <color name="taxi_collectif_color">#FF9800</color>
-    <color name="private_car_color">#006D9C</color>
-    <color name="metro_color">#2196F3</color>
-    <color name="bus_color">#9C27B0</color>
+    <!-- Transport Type Colors - Vibrant Modern -->
+    <color name="taxi_color">#FFCC00</color>
+    <color name="taxi_collectif_color">#FF9500</color>
+    <color name="private_car_color">#0A84FF</color>
+    <color name="metro_color">#5AC8FA</color>
+    <color name="bus_color">#AF52DE</color>
 
-    <!-- Status Colors -->
-    <color name="success">#4CAF50</color>
-    <color name="online">#4CAF50</color>
-    <color name="error">#E53935</color>
-    <color name="warning">#FF9800</color>
-    <color name="info">#006D9C</color>
+    <!-- Status Colors - iOS System Colors -->
+    <color name="success">#34C759</color>
+    <color name="online">#30D158</color>
+    <color name="error">#FF3B30</color>
+    <color name="warning">#FF9500</color>
+    <color name="info">#0A84FF</color>
 
-    <!-- Additional UI Colors -->
-    <color name="divider">#E0E0E0</color>
+    <!-- Modern UI Colors -->
+    <color name="divider">#E5E5EA</color>
+    <color name="separator">#C6C6C8</color>
     <color name="overlay">#80000000</color>
+    <color name="overlay_light">#40000000</color>
     <color name="transparent">#00000000</color>
+
+    <!-- Glassmorphism Effects -->
+    <color name="glass_background">#F0FFFFFF</color>
+    <color name="glass_border">#30FFFFFF</color>
+
+    <!-- Shadow Colors -->
+    <color name="shadow_light">#10000000</color>
+    <color name="shadow_medium">#20000000</color>
+    <color name="shadow_strong">#30000000</color>
+
+    <!-- Gradient Colors -->
+    <color name="gradient_blue_start">#667EEA</color>
+    <color name="gradient_blue_end">#764BA2</color>
+    <color name="gradient_sunset_start">#FF6B6B</color>
+    <color name="gradient_sunset_end">#FFE66D</color>
+    <color name="gradient_ocean_start">#2E3192</color>
+    <color name="gradient_ocean_end">#1BFFFF</color>
 </resources>

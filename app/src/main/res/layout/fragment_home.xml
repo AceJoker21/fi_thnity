@@ -10,31 +10,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Top Card with Welcome and Location -->
+    <!-- Modern Glassmorphism Top Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardTop"
-        style="@style/Widget.FiThnity.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardElevation="8dp">
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="@color/glass_background"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/glass_border">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
-            <!-- Welcome Text -->
+            <!-- Modern Welcome Text -->
             <TextView
                 android:id="@+id/tvWelcome"
-                style="@style/TextAppearance.FiThnity.Headline2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/welcome_back"
-                android:textSize="20sp" />
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:fontFamily="sans-serif-medium" />
 
-            <!-- Location Display -->
+            <!-- Modern Location Display -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,47 +48,53 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:contentDescription="@string/your_location"
                     android:src="@android:drawable/ic_menu_mylocation"
-                    android:tint="@color/text_secondary" />
+                    android:tint="@color/primary" />
 
                 <TextView
                     android:id="@+id/tvLocation"
-                    style="@style/TextAppearance.FiThnity.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Tunis, Tunisia" />
+                    android:text="Tunis, Tunisia"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Quick Actions Card -->
+    <!-- Modern Quick Actions Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardQuickActions"
-        style="@style/Widget.FiThnity.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="16dp"
-        app:cardElevation="8dp">
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="@color/card_background"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="12dp"
+        app:strokeWidth="0.5dp"
+        app:strokeColor="@color/divider">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="24dp">
 
-            <!-- Title -->
+            <!-- Modern Title -->
             <TextView
-                style="@style/TextAppearance.FiThnity.Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/quick_actions"
                 android:textColor="@color/text_primary"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
 
             <!-- Quick Action Buttons -->
             <LinearLayout
@@ -93,97 +104,102 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <!-- I Need a Ride -->
+                <!-- Modern I Need a Ride Button -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardNeedRide"
-                    style="@style/Widget.FiThnity.Card"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_height="140dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
                     app:cardBackgroundColor="@color/primary"
-                    app:cardElevation="4dp">
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="6dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="20dp">
 
                         <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:contentDescription="@string/i_need_ride"
                             android:src="@android:drawable/ic_menu_search"
                             android:tint="@android:color/white" />
 
                         <TextView
-                            style="@style/TextAppearance.FiThnity.Button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="12dp"
                             android:text="@string/i_need_ride"
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
-                            android:textSize="14sp" />
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-medium" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- I Offer a Ride -->
+                <!-- Modern I Offer a Ride Button -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardOfferRide"
-                    style="@style/Widget.FiThnity.Card"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="140dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
                     app:cardBackgroundColor="@color/accent"
-                    app:cardElevation="4dp">
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="6dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="20dp">
 
                         <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:contentDescription="@string/i_offer_ride"
                             android:src="@android:drawable/ic_menu_share"
                             android:tint="@android:color/white" />
 
                         <TextView
-                            style="@style/TextAppearance.FiThnity.Button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="12dp"
                             android:text="@string/i_offer_ride"
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
-                            android:textSize="14sp" />
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-medium" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Active Rides Indicator -->
+            <!-- Modern Active Rides Indicator -->
             <TextView
                 android:id="@+id/tvActiveRides"
-                style="@style/TextAppearance.FiThnity.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/no_active_rides"
-                android:textColor="@color/text_secondary" />
+                android:textColor="@color/text_tertiary"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

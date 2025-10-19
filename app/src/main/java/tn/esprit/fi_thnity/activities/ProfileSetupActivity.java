@@ -68,7 +68,13 @@ public class ProfileSetupActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         usersRef = FirebaseDatabase.getInstance("https://fi-thnity-11a68-default-rtdb.europe-west1.firebasedatabase.app")
                 .getReference("users");
-        storageRef = FirebaseStorage.getInstance().getReference("profile_photos");
+
+        // Initialize Firebase Storage with default bucket
+        try {
+            storageRef = FirebaseStorage.getInstance().getReference().child("profile_photos");
+        } catch (Exception e) {
+            Toast.makeText(this, "Storage initialization failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
 
         // Check if in edit mode
         isEditMode = getIntent().getBooleanExtra("isEditMode", false);
@@ -201,13 +207,33 @@ public class ProfileSetupActivity extends AppCompatActivity {
                                 saveUserProfile(firebaseUser, name, bio, uri.toString());
                             })
                             .addOnFailureListener(e -> {
-                                // Photo upload failed, but continue without photo
-                                saveUserProfile(firebaseUser, name, bio, null);
+                                showLoading(false);
+                                showCustomAlert("Upload Error",
+                                    "Failed to get photo URL: " + e.getMessage() +
+                                    "\n\nPlease try again or continue without updating the photo.",
+                                    "Try Again", () -> uploadPhotoAndSaveProfile(firebaseUser, name, bio));
                             });
                 })
                 .addOnFailureListener(e -> {
-                    // Photo upload failed, but continue without photo
-                    saveUserProfile(firebaseUser, name, bio, null);
+                    showLoading(false);
+                    // Show error with options
+                    new androidx.appcompat.app.AlertDialog.Builder(this, R.style.CustomAlertDialog)
+                            .setTitle("Photo Upload Failed")
+                            .setMessage("Failed to upload photo: " + e.getMessage() +
+                                    "\n\nWhat would you like to do?")
+                            .setPositiveButton("Save Without Photo", (dialog, which) -> {
+                                // In edit mode, keep existing photo. In create mode, save without photo
+                                String photoUrl = isEditMode ? currentPhotoUrl : null;
+                                saveUserProfile(firebaseUser, name, bio, photoUrl);
+                            })
+                            .setNegativeButton("Try Again", (dialog, which) -> {
+                                showLoading(true);
+                                uploadPhotoAndSaveProfile(firebaseUser, name, bio);
+                            })
+                            .setNeutralButton("Cancel", (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .show();
                 });
     }
 
@@ -221,9 +247,12 @@ public class ProfileSetupActivity extends AppCompatActivity {
         firebaseUser.updateProfile(profileUpdates);
 
         if (isEditMode) {
-            // In edit mode, only update specific fields
-            usersRef.child(firebaseUser.getUid()).child("name").setValue(name);
-            usersRef.child(firebaseUser.getUid()).child("photoUrl").setValue(photoUrl)
+            // In edit mode, update both fields atomically using a HashMap
+            java.util.HashMap<String, Object> updates = new java.util.HashMap<>();
+            updates.put("name", name);
+            updates.put("photoUrl", photoUrl);
+
+            usersRef.child(firebaseUser.getUid()).updateChildren(updates)
                     .addOnSuccessListener(aVoid -> {
                         showLoading(false);
                         Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
@@ -278,7 +307,8 @@ public class ProfileSetupActivity extends AppCompatActivity {
         } else {
             progressBar.setVisibility(View.GONE);
             btnComplete.setEnabled(true);
-            btnComplete.setText(R.string.complete_setup);
+            // Set correct button text based on mode
+            btnComplete.setText(isEditMode ? "Save Changes" : getString(R.string.complete_setup));
             fabCamera.setEnabled(true);
         }
     }
